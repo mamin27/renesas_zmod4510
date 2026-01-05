@@ -160,26 +160,11 @@ _Reset ( ) {
   return ecSuccess;  
 }
 
-void
-_Terminate ( int  sig ) {
-  printf ( "Termination requested by user\n" );
-  HAL_HandleError ( ecSuccess, NULL );
-}
-
 int
 HAL_Init ( Interface_t*  hal ) {
-
-  printf ( "Initializing Raspberry Pi HAL\n\n" );
-  printf ( "This application can be be terminated at any "
-           "time by pressing Ctrl-C\n\n" );
-
   _hal = hal;
 
   int errorCode = _Connect ( );
-
-  // register signal handler for Ctlr-C
-  // this needs to be called after gpioInitialize (called from _Connect)
-  signal ( SIGINT, _Terminate );
 
   if ( ! errorCode ) {
     hal -> msSleep        = _SleepMS;
