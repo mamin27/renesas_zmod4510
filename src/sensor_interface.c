@@ -130,7 +130,10 @@ int sensor_init() {
     dev.prod_data = prod_data;
 
     ret = detect_and_configure(&dev, ZMOD4510_PROD_DATA_LEN, &errContext);
-    if (ret) return ret;
+    if (ret) {
+        printf("Error during %s (err %d)\n", errContext, ret);
+        return ret;
+    }
 
     return init_no2_o3(&algo_handle);
 }
