@@ -39,6 +39,45 @@ pip install .
 
 * Verify that the Python module is installed
 
+# My commands for OrangePI 3
+```bash
+comet@orangepizero3:~/renesas_zmod4510/lib$ ls
+lib_no2_o3.a  lib_zmod4xxx_cleaning.a
+(.venv-test) comet@orangepizero3:~/renesas_zmod4510/lib$ strings lib_no2_o3.a | grep -E "GCC:|clang|GNU"
+GCC: (Linaro GCC 6.3-2017.02) 6.3.1 20170109
+.note.GNU-stack
+GCC: (Linaro GCC 6.3-2017.02) 6.3.1 20170109
+.note.GNU-stack
+GCC: (Linaro GCC 6.3-2017.02) 6.3.1 20170109
+.note.GNU-stack
+GCC: (Linaro GCC 6.3-2017.02) 6.3.1 20170109
+.note.GNU-stack
+
+
+echo "deb http://archive.debian.org/debian stretch main" | sudo tee /etc/apt/sources.list.d/stretch.list
+sudo apt update -o Acquire::Check-Valid-Until=false
+sudo apt install -y gcc-6 g++-6
+ 
+cd renesas_zmod4510/
+sudo apt upgrade
+sudo apt install -y git build-essential cmake
+mkdir build && cd build
+cmake -S .. -B .   -DCMAKE_C_COMPILER=gcc-6   -DCMAKE_BUILD_TYPE=Release
+make -j4
+
+python3 -m venv .venv-test
+source ./.venv-test/bin/activate
+pip install .
+python3 -c "import zmod4510; print(zmod4510.__file__); s = zmod4510.ZMOD4510(); print(dir(s))"
+
+(.venv-test) comet@orangepizero3:~/renesas_zmod4510/lib$ pip list
+Package    Version
+---------- -------
+pip        23.0.1
+setuptools 66.1.1
+zmod4510   0.1.0
+```
+
 ```bash
 python3 -c "import zmod4510; print(zmod4510.__file__); s = zmod4510.ZMOD4510(); print(dir(s))"
 ```
