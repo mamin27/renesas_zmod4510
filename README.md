@@ -39,6 +39,10 @@ pip install .
 
 * Verify that the Python module is installed
 
+```bash
+python3 -c "import zmod4510; print(zmod4510.__file__); s = zmod4510.ZMOD4510(); print(dir(s))"
+```
+
 # My commands for OrangePI 3
 ```bash
 comet@orangepizero3:~/renesas_zmod4510/lib$ ls
@@ -76,8 +80,4 @@ Package    Version
 pip        23.0.1
 setuptools 66.1.1
 zmod4510   0.1.0
-```
-
-```bash
-python3 -c "import zmod4510; print(zmod4510.__file__); s = zmod4510.ZMOD4510(); print(dir(s))"
 ```
