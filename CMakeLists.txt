@@ -19,15 +19,28 @@ set(COMMON_SOURCES
     src/sensors/zmod4xxx.c
     src/hal/zmod4xxx_hal.c
     src/hal/hal.c
-    src/hal/raspi/rpi.c
+    #src/hal/raspi/rpi.c
 )
 
 # Create shared library
 add_library(${PROJECT_NAME} SHARED ${COMMON_SOURCES} src/sensor_interface.c)
 
+# Global compiler definitions for the shared library target
+# 1. ZMOD4510: Enables the correct conditional blocks inside Renesas headers (fixes the zmod4xxx_init warning)
+# 2. Hardware configurations for the custom Linux HAL layer
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    ZMOD4510
+    ZMOD4510_I2C_BUS_NUMBER=0
+    ZMOD4510_I2C_ADDR=0x33
+)
+
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
-    src src/algos src/sensors src/hal)
+    src
+    src/algos
+    src/sensors
+    src/hal
+)
 
 # Link libraries directly
 target_link_directories(${PROJECT_NAME} PRIVATE
