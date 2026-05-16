@@ -61,13 +61,20 @@ GCC: (Linaro GCC 6.3-2017.02) 6.3.1 20170109
 echo "deb http://archive.debian.org/debian stretch main" | sudo tee /etc/apt/sources.list.d/stretch.list
 sudo apt update -o Acquire::Check-Valid-Until=false
 sudo apt install -y gcc-6 g++-6
- 
+
+# Orange Pi 3
 cd renesas_zmod4510/
 sudo apt upgrade
 sudo apt install -y git build-essential cmake
 mkdir build && cd build
 cmake -S .. -B .   -DCMAKE_C_COMPILER=gcc-6   -DCMAKE_BUILD_TYPE=Release
 make -j4
+
+# RPi 4
+cmake -S .. -B . \
+  -DCMAKE_C_COMPILER=/usr/local/gcc-6/bin/gcc-6 \
+  -DCMAKE_CXX_COMPILER=/usr/local/gcc-6/bin/g++-6 \
+  -DCMAKE_BUILD_TYPE=Release
 
 python3 -m venv .venv-test
 source ./.venv-test/bin/activate
