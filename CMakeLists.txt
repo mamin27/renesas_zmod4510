@@ -22,20 +22,43 @@ set(COMMON_SOURCES
     src/hal/raspi/rpi.c
 )
 
+# Replace the proprietary static archives with the C reimplementation in
+# src/reimpl (see doc/reimplementation.md).
+option(USE_REIMPL "Build src/reimpl instead of linking lib/lib_*.a" OFF)
+
+set(REIMPL_SOURCES
+    src/reimpl/no2_o3.c
+    src/reimpl/no2_o3_nnet.c
+    src/reimpl/no2_o3_data.c
+    src/reimpl/no2_o3_nnet_data.c
+    src/reimpl/zmod4xxx_cleaning.c
+)
+
+if(USE_REIMPL)
+  list(APPEND COMMON_SOURCES ${REIMPL_SOURCES})
+  # Keep the evaluation order of the original: no extra FMA contraction.
+  set_source_files_properties(${REIMPL_SOURCES}
+      PROPERTIES COMPILE_FLAGS "-ffp-contract=off")
+endif()
+
 # Create shared library
 add_library(${PROJECT_NAME} SHARED ${COMMON_SOURCES} src/sensor_interface.c)
 
 # Include directories
 target_include_directories(${PROJECT_NAME} PRIVATE
-    src src/algos src/sensors src/hal)
+    src src/algos src/sensors src/hal src/reimpl)
 
 # Link libraries directly
 target_link_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    _no2_o3.a
-    _zmod4xxx_cleaning.a
-    m)
+if(USE_REIMPL)
+  target_link_libraries(${PROJECT_NAME} PRIVATE m)
+else()
+  target_link_libraries(${PROJECT_NAME} PRIVATE
+      _no2_o3.a
+      _zmod4xxx_cleaning.a
+      m)
+endif()
 
 # Add executable
 add_executable(${EXE_NAME} src/main.c)

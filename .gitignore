@@ -6,3 +6,5 @@
 /build
 /_skbuild
 /python/zmod4510.egg-info
+/build-make
+

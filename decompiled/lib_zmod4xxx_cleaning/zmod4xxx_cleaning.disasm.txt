@@ -1,0 +1,187 @@
+=== objdump -dr ===
+
+zmod4xxx_cleaning.c.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <zmod4xxx_cleaning_run>:
+   0:	a9b87bfd 	stp	x29, x30, [sp, #-128]!
+   4:	52800023 	mov	w3, #0x1                   	// #1
+   8:	910003fd 	mov	x29, sp
+   c:	a9401c06 	ldp	x6, x7, [x0]
+  10:	a90153f3 	stp	x19, x20, [sp, #16]
+  14:	a9041fa6 	stp	x6, x7, [x29, #64]
+  18:	9100ffa2 	add	x2, x29, #0x3f
+  1c:	a9411c06 	ldp	x6, x7, [x0, #16]
+  20:	a9051fa6 	stp	x6, x7, [x29, #80]
+  24:	a9432408 	ldp	x8, x9, [x0, #48]
+  28:	a90727a8 	stp	x8, x9, [x29, #112]
+  2c:	a9421c06 	ldp	x6, x7, [x0, #32]
+  30:	3900fbbf 	strb	wzr, [x29, #62]
+  34:	f9400c04 	ldr	x4, [x0, #24]
+  38:	f90013f5 	str	x21, [sp, #32]
+  3c:	90000015 	adrp	x21, 0 <zmod4xxx_cleaning_run>
+			3c: R_AARCH64_ADR_PREL_PG_HI21	.data
+  40:	a9061fa6 	stp	x6, x7, [x29, #96]
+  44:	910002a1 	add	x1, x21, #0x0
+			44: R_AARCH64_ADD_ABS_LO12_NC	.data
+  48:	39400000 	ldrb	w0, [x0]
+  4c:	f9003fa1 	str	x1, [x29, #120]
+  50:	52800701 	mov	w1, #0x38                  	// #56
+  54:	d63f0080 	blr	x4
+  58:	72001c1f 	tst	w0, #0xff
+  5c:	54000c61 	b.ne	1e8 <zmod4xxx_cleaning_run+0x1e8>  // b.any
+  60:	3940ffb3 	ldrb	w19, [x29, #63]
+  64:	35000bf3 	cbnz	w19, 1e0 <zmod4xxx_cleaning_run+0x1e0>
+  68:	910103a0 	add	x0, x29, #0x40
+  6c:	94000000 	bl	0 <zmod4xxx_init_measurement>
+			6c: R_AARCH64_CALL26	zmod4xxx_init_measurement
+  70:	13001c00 	sxtb	w0, w0
+  74:	340000a0 	cbz	w0, 88 <zmod4xxx_cleaning_run+0x88>
+  78:	a94153f3 	ldp	x19, x20, [sp, #16]
+  7c:	f94013f5 	ldr	x21, [sp, #32]
+  80:	a8c87bfd 	ldp	x29, x30, [sp], #128
+  84:	d65f03c0 	ret
+  88:	910103a0 	add	x0, x29, #0x40
+  8c:	52800014 	mov	w20, #0x0                   	// #0
+  90:	94000000 	bl	0 <zmod4xxx_start_measurement>
+			90: R_AARCH64_CALL26	zmod4xxx_start_measurement
+  94:	13001c00 	sxtb	w0, w0
+  98:	35ffff00 	cbnz	w0, 78 <zmod4xxx_cleaning_run+0x78>
+  9c:	f94037a1 	ldr	x1, [x29, #104]
+  a0:	52800640 	mov	w0, #0x32                  	// #50
+  a4:	d63f0020 	blr	x1
+  a8:	9100fba1 	add	x1, x29, #0x3e
+  ac:	910103a0 	add	x0, x29, #0x40
+  b0:	94000000 	bl	0 <zmod4xxx_read_status>
+			b0: R_AARCH64_CALL26	zmod4xxx_read_status
+  b4:	13001c00 	sxtb	w0, w0
+  b8:	35fffe00 	cbnz	w0, 78 <zmod4xxx_cleaning_run+0x78>
+  bc:	3940fba0 	ldrb	w0, [x29, #62]
+  c0:	12001000 	and	w0, w0, #0x1f
+  c4:	6b00027f 	cmp	w19, w0
+  c8:	540000e0 	b.eq	e4 <zmod4xxx_cleaning_run+0xe4>  // b.none
+  cc:	f9403fa1 	ldr	x1, [x29, #120]
+  d0:	3940e421 	ldrb	w1, [x1, #57]
+  d4:	53017c21 	lsr	w1, w1, #1
+  d8:	51000421 	sub	w1, w1, #0x1
+  dc:	6b01001f 	cmp	w0, w1
+  e0:	54000080 	b.eq	f0 <zmod4xxx_cleaning_run+0xf0>  // b.none
+  e4:	2a0003f3 	mov	w19, w0
+  e8:	17ffffed 	b	9c <zmod4xxx_cleaning_run+0x9c>
+  ec:	d503201f 	nop
+  f0:	11000694 	add	w20, w20, #0x1
+  f4:	12003e94 	and	w20, w20, #0xffff
+  f8:	7100769f 	cmp	w20, #0x1d
+  fc:	54ffff49 	b.ls	e4 <zmod4xxx_cleaning_run+0xe4>  // b.plast
+ 100:	394103a0 	ldrb	w0, [x29, #64]
+ 104:	90000002 	adrp	x2, 0 <zmod4xxx_cleaning_run>
+			104: R_AARCH64_ADR_PREL_PG_HI21	.bss
+ 108:	f94033a4 	ldr	x4, [x29, #96]
+ 10c:	52800023 	mov	w3, #0x1                   	// #1
+ 110:	91000042 	add	x2, x2, #0x0
+			110: R_AARCH64_ADD_ABS_LO12_NC	.bss
+ 114:	12800d81 	mov	w1, #0xffffff93            	// #-109
+ 118:	d63f0080 	blr	x4
+ 11c:	72001c1f 	tst	w0, #0xff
+ 120:	54000641 	b.ne	1e8 <zmod4xxx_cleaning_run+0x1e8>  // b.any
+ 124:	f94037a1 	ldr	x1, [x29, #104]
+ 128:	52800640 	mov	w0, #0x32                  	// #50
+ 12c:	d63f0020 	blr	x1
+ 130:	9100fba1 	add	x1, x29, #0x3e
+ 134:	910103a0 	add	x0, x29, #0x40
+ 138:	94000000 	bl	0 <zmod4xxx_read_status>
+			138: R_AARCH64_CALL26	zmod4xxx_read_status
+ 13c:	13001c00 	sxtb	w0, w0
+ 140:	35fff9c0 	cbnz	w0, 78 <zmod4xxx_cleaning_run+0x78>
+ 144:	39c0fba0 	ldrsb	w0, [x29, #62]
+ 148:	37fffee0 	tbnz	w0, #31, 124 <zmod4xxx_cleaning_run+0x124>
+ 14c:	f94037a1 	ldr	x1, [x29, #104]
+ 150:	52800640 	mov	w0, #0x32                  	// #50
+ 154:	910002b5 	add	x21, x21, #0x0
+			154: R_AARCH64_ADD_ABS_LO12_NC	.data
+ 158:	d63f0020 	blr	x1
+ 15c:	394103a0 	ldrb	w0, [x29, #64]
+ 160:	52800023 	mov	w3, #0x1                   	// #1
+ 164:	f94033a4 	ldr	x4, [x29, #96]
+ 168:	910182a2 	add	x2, x21, #0x60
+ 16c:	128008e1 	mov	w1, #0xffffffb8            	// #-72
+ 170:	d63f0080 	blr	x4
+ 174:	72001c1f 	tst	w0, #0xff
+ 178:	54000381 	b.ne	1e8 <zmod4xxx_cleaning_run+0x1e8>  // b.any
+ 17c:	f94037a1 	ldr	x1, [x29, #104]
+ 180:	52800640 	mov	w0, #0x32                  	// #50
+ 184:	d63f0020 	blr	x1
+ 188:	3940ffa1 	ldrb	w1, [x29, #63]
+ 18c:	52800023 	mov	w3, #0x1                   	// #1
+ 190:	394103a0 	ldrb	w0, [x29, #64]
+ 194:	9100ffa2 	add	x2, x29, #0x3f
+ 198:	f94033a4 	ldr	x4, [x29, #96]
+ 19c:	11000421 	add	w1, w1, #0x1
+ 1a0:	3900ffa1 	strb	w1, [x29, #63]
+ 1a4:	52800701 	mov	w1, #0x38                  	// #56
+ 1a8:	d63f0080 	blr	x4
+ 1ac:	72001c1f 	tst	w0, #0xff
+ 1b0:	540001c1 	b.ne	1e8 <zmod4xxx_cleaning_run+0x1e8>  // b.any
+ 1b4:	f94037a1 	ldr	x1, [x29, #104]
+ 1b8:	52800640 	mov	w0, #0x32                  	// #50
+ 1bc:	d63f0020 	blr	x1
+ 1c0:	394103a0 	ldrb	w0, [x29, #64]
+ 1c4:	52800023 	mov	w3, #0x1                   	// #1
+ 1c8:	f94033a4 	ldr	x4, [x29, #96]
+ 1cc:	910186a2 	add	x2, x21, #0x61
+ 1d0:	128008e1 	mov	w1, #0xffffffb8            	// #-72
+ 1d4:	d63f0080 	blr	x4
+ 1d8:	13001c00 	sxtb	w0, w0
+ 1dc:	17ffffa7 	b	78 <zmod4xxx_cleaning_run+0x78>
+ 1e0:	128000e0 	mov	w0, #0xfffffff8            	// #-8
+ 1e4:	17ffffa5 	b	78 <zmod4xxx_cleaning_run+0x78>
+ 1e8:	12800040 	mov	w0, #0xfffffffd            	// #-3
+ 1ec:	17ffffa3 	b	78 <zmod4xxx_cleaning_run+0x78>
+=== sections ===
+There are 11 section headers, starting at offset 0x710:
+
+Section Headers:
+  [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
+  [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0
+  [ 1] .text             PROGBITS        0000000000000000 000040 0001f0 00  AX  0   0  8
+  [ 2] .rela.text        RELA            0000000000000000 000588 0000d8 18   I  9   1  8
+  [ 3] .data             PROGBITS        0000000000000000 000230 000073 00  WA  0   0  8
+  [ 4] .rela.data        RELA            0000000000000000 000660 000060 18   I  9   3  8
+  [ 5] .bss              NOBITS          0000000000000000 0002a3 000001 00  WA  0   0  1
+  [ 6] .comment          PROGBITS        0000000000000000 0002a3 00002e 01  MS  0   0  1
+  [ 7] .note.GNU-stack   PROGBITS        0000000000000000 0002d1 000000 00      0   0  1
+  [ 8] .shstrtab         STRTAB          0000000000000000 0006c0 00004f 00      0   0  1
+  [ 9] .symtab           SYMTAB          0000000000000000 0002d8 0001c8 18     10  15  8
+  [10] .strtab           STRTAB          0000000000000000 0004a0 0000e4 00      0   0  1
+Key to Flags:
+  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+  L (link order), O (extra OS processing required), G (group), T (TLS),
+  C (compressed), x (unknown), o (OS specific), E (exclude),
+  D (mbind), p (processor specific)
+=== rodata ===
+
+zmod4xxx_cleaning.c.o:     file format elf64-littleaarch64
+
+aarch64-linux-gnu-objdump: section '.rodata' mentioned in a -j option, but not found in any input file
+=== relocs ===
+
+Relocation section '.rela.text' at offset 0x588 contains 9 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+000000000000003c  0000000300000113 R_AARCH64_ADR_PREL_PG_HI21 0000000000000000 .data + 0
+0000000000000044  0000000300000115 R_AARCH64_ADD_ABS_LO12_NC 0000000000000000 .data + 0
+000000000000006c  000000100000011b R_AARCH64_CALL26       0000000000000000 zmod4xxx_init_measurement + 0
+0000000000000090  000000110000011b R_AARCH64_CALL26       0000000000000000 zmod4xxx_start_measurement + 0
+00000000000000b0  000000120000011b R_AARCH64_CALL26       0000000000000000 zmod4xxx_read_status + 0
+0000000000000104  0000000400000113 R_AARCH64_ADR_PREL_PG_HI21 0000000000000000 .bss + 0
+0000000000000110  0000000400000115 R_AARCH64_ADD_ABS_LO12_NC 0000000000000000 .bss + 0
+0000000000000138  000000120000011b R_AARCH64_CALL26       0000000000000000 zmod4xxx_read_status + 0
+0000000000000154  0000000300000115 R_AARCH64_ADD_ABS_LO12_NC 0000000000000000 .data + 0
+
+Relocation section '.rela.data' at offset 0x660 contains 4 entries:
+    Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+0000000000000010  0000000300000101 R_AARCH64_ABS64        0000000000000000 .data + 68
+0000000000000020  0000000300000101 R_AARCH64_ABS64        0000000000000000 .data + 6a
+0000000000000030  0000000300000101 R_AARCH64_ABS64        0000000000000000 .data + 6e
+0000000000000040  0000000300000101 R_AARCH64_ABS64        0000000000000000 .data + 6f

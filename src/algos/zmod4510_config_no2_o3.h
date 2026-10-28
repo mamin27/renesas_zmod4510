@@ -30,7 +30,7 @@
 /**********************************/
 /* < Define I2C slave address > */
 #define ZMOD4510_I2C_ADDR 0x33
-#define ZMOD4510_I2C_BUS 0
+/* sensor_init() takes the bus from ~/.comet/config.yaml key i2c.smb, not from a fixed number. */
 
 /**********************************/
 /* < Define product data length > */

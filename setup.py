@@ -7,5 +7,7 @@ setup(
     packages=["zmod4510"],
     package_dir={"zmod4510": "python"},
     cmake_install_dir=".",
+    # The module the test script imports must use src/reimpl, not the archives.
+    cmake_args=["-DUSE_REIMPL=ON"],
     python_requires=">=3.10",
 )

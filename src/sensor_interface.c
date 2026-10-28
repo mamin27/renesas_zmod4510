@@ -4,6 +4,12 @@
 #include "zmod4xxx_cleaning.h"
 #include "zmod4510_config_no2_o3.h"
 
+#include <ctype.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 /* Internal variables */
 static int          ret;
 static Interface_t  hal;
@@ -118,9 +124,103 @@ void read_and_verify(zmod4xxx_dev_t* sensor, uint8_t* result, char const* id) {
     }
 }
 
+/* Read i2c.smb from ~/.comet/config.yaml. The value is "i2c-N" or a bare number.
+ * smb_detect and other keys are ignored. Returns 0 and writes *bus_out, or -1. */
+static int comet_yaml_i2c_bus(int *bus_out) {
+    const char *home = getenv("HOME");
+    char path[512];
+    FILE *file;
+    char line[256];
+
+    if (home == NULL || home[0] == '\0') {
+        printf("HOME is not set; cannot read ~/.comet/config.yaml\n");
+        return -1;
+    }
+    if (snprintf(path, sizeof path, "%s/.comet/config.yaml", home) >= (int)sizeof path) {
+        printf("Path to ~/.comet/config.yaml does not fit\n");
+        return -1;
+    }
+
+    file = fopen(path, "r");
+    if (file == NULL) {
+        printf("Cannot open %s: %s\n", path, strerror(errno));
+        return -1;
+    }
+
+    while (fgets(line, sizeof line, file) != NULL) {
+        char *cursor = line;
+        char *comment;
+        char *colon;
+        char *value;
+        char *end = NULL;
+        long bus;
+
+        while (*cursor != '\0' && isspace((unsigned char)*cursor)) {
+            cursor++;
+        }
+        if (*cursor == '\0' || *cursor == '#' || *cursor == '\n') {
+            continue;
+        }
+        comment = strchr(cursor, '#');
+        if (comment != NULL) {
+            *comment = '\0';
+        }
+        colon = strchr(cursor, ':');
+        if (colon == NULL) {
+            continue;
+        }
+        *colon = '\0';
+        while (*cursor != '\0' && isspace((unsigned char)*cursor)) {
+            cursor++;
+        }
+        end = cursor + strlen(cursor);
+        while (end > cursor && isspace((unsigned char)end[-1])) {
+            *--end = '\0';
+        }
+        if (strcmp(cursor, "smb") != 0) {
+            continue;
+        }
+
+        value = colon + 1;
+        while (*value != '\0' && (isspace((unsigned char)*value) || *value == '"' || *value == '\'')) {
+            value++;
+        }
+        if (strncmp(value, "i2c-", 4) == 0) {
+            value += 4;
+        }
+        bus = strtol(value, &end, 10);
+        if (end == value || bus < 0 || bus > 255) {
+            printf("Bad i2c.smb value in %s\n", path);
+            fclose(file);
+            return -1;
+        }
+        while (*end != '\0' && isspace((unsigned char)*end)) {
+            end++;
+        }
+        if (*end != '\0' && *end != '"' && *end != '\'') {
+            printf("Bad i2c.smb value in %s\n", path);
+            fclose(file);
+            return -1;
+        }
+        *bus_out = (int)bus;
+        fclose(file);
+        return 0;
+    }
+
+    fclose(file);
+    printf("No i2c.smb entry in %s\n", path);
+    return -1;
+}
+
 /* Initialize the hardware and algorithm */
 int sensor_init() {
-    return sensor_init_with_bus(ZMOD4510_I2C_BUS);
+    int bus;
+
+    if (comet_yaml_i2c_bus(&bus) != 0) {
+        return -1;
+    }
+    printf("Using /dev/i2c-%d from ~/.comet/config.yaml\n", bus);
+    return sensor_init_with_bus(bus);
 }
 
 int sensor_init_with_bus(int i2c_bus) {
